@@ -24,6 +24,7 @@ $('.container').on('mouseenter', function(){
   },2000)
 })
 
+
 function makeFakeSlides(){
   let $firstCopy = $images.eq(0).clone(true)
   let $lastCopy = $images.eq($images.length - 1).clone(true)
