@@ -1,15 +1,26 @@
 *{margin: 0; padding: 0; box-sizing: border-box;}
 
 .window{
-  width: 800px;
-  height: 500px;
+  width: 900px;
+  height: 600px;
   margin: 20px auto;
   overflow: hidden;
 }
-.images{
+.slides{
   display: flex;
   transition: all 1s;
 }
-.images > img{
+.slides > img{
   width: 100%;
+}
+button{
+  padding: 10px 15px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 4px;
+  margin: 20px 0;
+  background: #55acee;
+  box-shadow: 0 3px 0 0 rgba(22, 137, 224, 1);
+  outline: none;
 }

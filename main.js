@@ -1,31 +1,29 @@
-let $buttons = $('#buttonWrapper>button')
 let $slides = $('#slides')
 let $images = $slides.children('img')
 let current = 0
+let isDoing = false
 
 makeFakeSlides()
-$slides.css({transform:'translateX(-800px)'})
+$slides.hide(0, function () {
+  $slides.css({ transform: 'translateX(-900px)' }).show()
+})
 bindEvents()
-$(next).on('click', function(){
-  goToSlide(current+1)
-})
-$(previous).on('click',function(){
-  goToSlide(current-1)
-})
 
-let timer = setInterval(function(){
-  goToSlide(current+1)
-},2000)
-$('.container').on('mouseenter', function(){
+
+
+let timer = setInterval(function () {
+  goToSlide(current + 1)
+}, 2000)
+$('.container').on('mouseenter', function () {
   window.clearInterval(timer)
-}).on('mouseleave', function(){
-  timer = setInterval(function(){
-    goToSlide(current+1)
-  },2000)
+}).on('mouseleave', function () {
+  timer = setInterval(function () {
+    goToSlide(current + 1)
+  }, 2000)
 })
 
 
-function makeFakeSlides(){
+function makeFakeSlides() {
   let $firstCopy = $images.eq(0).clone(true)
   let $lastCopy = $images.eq($images.length - 1).clone(true)
 
@@ -33,38 +31,50 @@ function makeFakeSlides(){
   $slides.prepend($lastCopy)
 }
 
-function bindEvents(){
-  $('#buttonWrapper').on('click', 'button', function(e){
+function bindEvents() {
+  $('#next').on('click', function () {
+    !isDoing && goToSlide(current + 1)
+  })
+  $('#previous').on('click', function () {
+    !isDoing && goToSlide(current - 1)
+  })
+  $('#buttonWrapper').on('click', 'button', function (e) {
     let $button = $(e.currentTarget)
     let index = $button.index()
-    goToSlide(index)
+    !isDoing && goToSlide(index)
   })
 }
 
-function goToSlide(index){
-  if(index>$buttons.length - 1){
+function goToSlide(index) {
+  isDoing = true
+  if (index > $images.length - 1) {
     index = 0
-  }else if(index<0){
-    index = $buttons.length - 1
+  } else if (index < 0) {
+    index = $images.length - 1
   }
-  if(current === $buttons.length - 1 && index === 0){
-    $slides.css({transform:`translateX(${-($buttons.length+1)*800}px)`})
-      .one('transitionend', function(){
-        $slides.hide()
-          .offset()
-        $slides.css({transform:`translateX(${-(index+1)*800}px)`})
-          .show()
-      })
-  }else if(current === 0 && index === $buttons.length - 1){
-    $slides.css({transform:`translateX(0px)`})
-      .one('transitionend', function(){
-        $slides.hide()
-          .offset()
-        $slides.css({transform:`translateX(${-(index+1)*800}px)`})
-          .show()
+  if (current === $images.length - 1 && index === 0) {
+    $slides.css({ transform: `translateX(${-($images.length + 1) * 900}px)` })
+      .one('transitionend', function () {
+        $slides.hide(0, function () {
+          $slides.css({ transform: `translateX(${-(index + 1) * 900}px)` }).show(0, function () {
+            isDoing = false
+          })
         })
-  }else{
-    $slides.css({transform:`translateX(${-(index+1)*800}px)`})
+      })
+  } else if (current === 0 && index === $images.length - 1) {
+    $slides.css({ transform: `translateX(0px)` })
+      .one('transitionend', function () {
+        $slides.hide(0, function () {
+          $slides.css({ transform: `translateX(${-(index + 1) * 900}px)` }).show(0, function () {
+            isDoing = false
+          })
+        })
+      })
+  } else {
+    $slides.css({ transform: `translateX(${-(index + 1) * 900}px)` })
+      .one('transitionend', function () {
+        isDoing = false
+      })
   }
   current = index
 }
